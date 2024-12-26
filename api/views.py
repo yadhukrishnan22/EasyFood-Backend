@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from api.models import FoodCategory, Food
 from rest_framework import status
+from rest_framework import viewsets
 
 
 class SignUpView(CreateAPIView):
@@ -82,11 +83,16 @@ class FoodCreateListView(generics.ListCreateAPIView):
     queryset = Food.objects.all()
 
 
+
 class FoodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = FoodSerializer
 
     queryset = Food.objects.all()
+
+
+
+
 
 
 

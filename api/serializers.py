@@ -52,6 +52,14 @@ class FoodCategorySerializer(serializers.ModelSerializer):
         fields= "__all__"
 
         read_only_field = ['id', 'created_date', 'owner', 'is_active']
+    
+    def validate_name(self, value):
+
+        if FoodCategory.objects.filter(food_category_name = value).exists():
+
+            raise serializers.ValidationError("Category name already exists")
+        
+        return value
 
 
 class FoodSerializer(serializers.ModelSerializer):
