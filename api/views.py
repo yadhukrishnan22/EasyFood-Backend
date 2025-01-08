@@ -75,9 +75,9 @@ class GetTokenView(APIView):
 
 class FoodCategoryCreateView(APIView):
 
-    authentication_classes = [authentication.BasicAuthentication]
+    # authentication_classes = [authentication.BasicAuthentication]
 
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 
     def get(self, request, *args, **kwargs):
@@ -120,9 +120,9 @@ class FoodCreateListView(generics.ListCreateAPIView):
 
     serializer_class = FoodSerializer
 
-    authentication_classes = [authentication.BasicAuthentication]
+    # authentication_classes = [authentication.BasicAuthentication]
 
-    permission_classes = [permissions.IsAuthenticated]   
+    # permission_classes = [permissions.IsAuthenticated]   
 
     def get(self, request, *args, **kwargs):
 

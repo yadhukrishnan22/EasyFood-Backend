@@ -29,14 +29,14 @@ urlpatterns = [
     
     path('admin/', admin.site.urls),
     path('api/signup/', views.SignUpView.as_view() ),
-    path('api/token/', views.GetTokenView.as_view()),
-    path('api/foodcat/add/', views.FoodCategoryCreateView.as_view()),
+    path('api/signin/', views.SignInView.as_view(), name='signin'),
+    path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('api/foodcat/', views.FoodCategoryCreateView.as_view()),
     path('api/foodcat/<int:pk>/', views.FoodCategoryRetrieveUpdateDestroyView.as_view()),
-    path('api/food/add/', views.FoodCreateListView.as_view()),
+    path('api/food/', views.FoodCreateListView.as_view()),
     path('api/food/<int:pk>/', views.FoodRetrieveUpdateDestroyView.as_view()),
-    path('token/', TokenObtainPairView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
-    path('api/signin/', views.SignInView.as_view(), name='signin')
+    # path('api/token/', views.GetTokenView.as_view()),
     
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
