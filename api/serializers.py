@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from django.contrib.auth.models import User
 
+from django.contrib.auth import authenticate
+
 from api.models import Seller, FoodCategory, Food
 
 
@@ -36,23 +38,29 @@ class UserSerilizer(serializers.ModelSerializer):
         return Seller.objects.create_user(**validated_data, password = password1)
 
 
-class LoginSerilizer(serializers.Serializer):
+class SignInSerializer(serializers.Serializer):
 
     username = serializers.CharField()
-
     password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+        if user is None:
+            raise serializers.ValidationError("Invalid credentials")
+        data['user'] = user
+        return data
 
 
 class FoodCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
 
-        model = FoodCategory
+        model = FoodCategory        
 
-        fields= "__all__"
+        fields= ['food_category_name', 'category_image', 'seller_obj' ]
 
         read_only_field = ['id', 'created_date', 'owner', 'is_active']
-    
+     
     def validate_name(self, value):
 
         if FoodCategory.objects.filter(food_category_name = value).exists():
@@ -68,9 +76,18 @@ class FoodSerializer(serializers.ModelSerializer):
 
         model = Food
 
-        fields = "__all__"
+        fields = ["food_name", "description", "food_image", "food_category_obj", "seller_category", "price", "is_available", "time"]
 
         read_only_field = ['id', 'created_date', 'owner', 'is_active']
+    
+    
+    def validate_name(self, value):
+
+        if Food.objects.filter(food_name = value).exists():
+
+            raise serializers.ValidationError("Food name already exists")
+        
+        return value
 
 
 

@@ -92,6 +92,11 @@ class FoodCategory(BaseModel):
 
     seller_obj = models.ForeignKey(Seller, on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['seller_obj', 'food_category_name'], name='unique_category')
+        ]
+
 
 
 
@@ -110,6 +115,13 @@ class Food(BaseModel):
     price = models.DecimalField(max_digits=10, decimal_places= 2)
 
     is_available = models.BooleanField(default = True)
+
+    time = models.TimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['seller_category', 'food_name'], name='unique_food')
+        ]
 
 
 

@@ -20,6 +20,10 @@ from api import views
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     
@@ -29,7 +33,10 @@ urlpatterns = [
     path('api/foodcat/add/', views.FoodCategoryCreateView.as_view()),
     path('api/foodcat/<int:pk>/', views.FoodCategoryRetrieveUpdateDestroyView.as_view()),
     path('api/food/add/', views.FoodCreateListView.as_view()),
-    path('api/food/<int:pk>/', views.FoodRetrieveUpdateDestroyView.as_view())
+    path('api/food/<int:pk>/', views.FoodRetrieveUpdateDestroyView.as_view()),
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
+    path('api/signin/', views.SignInView.as_view(), name='signin')
     
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
