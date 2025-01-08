@@ -108,13 +108,15 @@ class Food(BaseModel):
 
     food_image = models.ImageField(upload_to ='food_images', null= True)
 
-    food_cateogory_obj = models.ForeignKey(FoodCategory, on_delete=models.CASCADE)
+    food_category_obj = models.ForeignKey(FoodCategory, on_delete=models.CASCADE)
 
     seller_category = models.ForeignKey(Seller, on_delete=models.CASCADE)
 
     price = models.DecimalField(max_digits=10, decimal_places= 2)
 
     is_available = models.BooleanField(default = True)
+
+
 
 
     class Meta:
