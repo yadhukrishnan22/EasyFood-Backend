@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.generics import CreateAPIView
-from api.serializers import UserSerilizer, SignInSerializer, FoodCategorySerializer, FoodSerializer
+from api.serializers import UserSerilizer, SignInSerializer, FoodCategorySerializer, FoodSerializer, Seller
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
@@ -14,6 +14,7 @@ from rest_framework import viewsets
 from rest_framework import authentication, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 
@@ -47,37 +48,56 @@ class SignInView(APIView):
 
 
 
-class GetTokenView(APIView):
+# class GetTokenView(APIView):
 
-    serializer_class = SignInSerializer
+#     serializer_class = SignInSerializer
 
-    def post(self, request, *args, **kwargs):
+#     def post(self, request, *args, **kwargs):
 
-        serializer_instance = self.serializer_class(data = request.data)
+#         serializer_instance = self.serializer_class(data = request.data)
 
 
-        if serializer_instance.is_valid():
+#         if serializer_instance.is_valid():
 
-            uname = serializer_instance.validated_data.get("username")
+#             uname = serializer_instance.validated_data.get("username")
 
-            pwd = serializer_instance.validated_data.get("password")
+#             pwd = serializer_instance.validated_data.get("password")
 
-            user_obj = authenticate(request, username = uname, password = pwd)
+#             user_obj = authenticate(request, username = uname, password = pwd)
 
-            if user_obj:
+#             if user_obj:
 
-                token, created = Token.objects.get_or_create(user = user_obj)
+#                 token, created = Token.objects.get_or_create(user = user_obj)
     
-                return Response(data = token.key)
+#                 return Response(data = token.key)
             
-            return Response(data = {"message":"invalid credential"})
+#             return Response(data = {"message":"invalid credential"})
+
+
+class FoodMenuView(APIView):
+
+    def get(self, request, *args, **kwargs):
+
+        pin = kwargs.get('pin')
+        
+        try:
+            owner = get_object_or_404(Seller, pin = pin)
+          
+        except:
+            return Response({"detail":"seller not found"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        food_items = Food.objects.filter(owner = owner)
+
+        serializer_instance = FoodSerializer(food_items, many=True)
+
+        return Response({"seller":owner.username, "food_items":serializer_instance.data})
 
 
 class FoodCategoryCreateView(APIView):
 
-    # authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [authentication.BasicAuthentication]
 
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
 
     def get(self, request, *args, **kwargs):
@@ -88,7 +108,6 @@ class FoodCategoryCreateView(APIView):
 
         return Response(data= serializer_instance.data)
         
-
     def post(self, request, *args, **kwargs):
 
         serializer = FoodCategorySerializer(data = request.data)
@@ -120,9 +139,9 @@ class FoodCreateListView(generics.ListCreateAPIView):
 
     serializer_class = FoodSerializer
 
-    # authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [authentication.BasicAuthentication]
 
-    # permission_classes = [permissions.IsAuthenticated]   
+    permission_classes = [permissions.IsAuthenticated]   
 
     def get(self, request, *args, **kwargs):
 
