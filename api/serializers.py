@@ -76,7 +76,7 @@ class FoodSerializer(serializers.ModelSerializer):
 
         model = Food
 
-        fields = ["food_name", "description", "food_image", "food_category_obj", "seller_category", "price", "is_available", "time"]
+        fields = "__all__"
 
         read_only_field = ['id', 'created_date', 'owner', 'is_active']
     

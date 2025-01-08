@@ -116,7 +116,6 @@ class Food(BaseModel):
 
     is_available = models.BooleanField(default = True)
 
-    time = models.TimeField()
 
     class Meta:
         constraints = [

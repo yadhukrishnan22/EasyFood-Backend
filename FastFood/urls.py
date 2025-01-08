@@ -37,6 +37,8 @@ urlpatterns = [
     path('api/food/', views.FoodCreateListView.as_view()),
     path('api/food/<int:pk>/', views.FoodRetrieveUpdateDestroyView.as_view()),
     # path('api/token/', views.GetTokenView.as_view()),
+    #localhost:api/order post
+    #localhost:api/checkout 
     
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
